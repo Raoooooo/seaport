@@ -1,15 +1,19 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.13;
+pragma solidity >=0.8.13;
 
 import { ZoneInterface } from "../interfaces/ZoneInterface.sol";
 
 import { OrderType } from "./ConsiderationEnums.sol";
 
+// prettier-ignore
 import { AdvancedOrder, CriteriaResolver } from "./ConsiderationStructs.sol";
 
 import "./ConsiderationConstants.sol";
 
-import { ZoneInteractionErrors } from "../interfaces/ZoneInteractionErrors.sol";
+// prettier-ignore
+import {
+    ZoneInteractionErrors
+} from "../interfaces/ZoneInteractionErrors.sol";
 
 import { LowLevelHelpers } from "./LowLevelHelpers.sol";
 

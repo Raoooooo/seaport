@@ -1,10 +1,13 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.7;
-
+pragma solidity >=0.8.7;
 import { PausableZone } from "../PausableZone.sol";
 
-import { PausableZoneEventsAndErrors } from "./PausableZoneEventsAndErrors.sol";
+// prettier-ignore
+import {
+    PausableZoneEventsAndErrors
+} from "./PausableZoneEventsAndErrors.sol";
 
+// prettier-ignore
 import {
     Order,
     Fulfillment,
@@ -63,8 +66,8 @@ interface PausableZoneControllerInterface {
      *                            cancelled.
      * @param seaportAddress      The Seaport address.
      * @param orders              The orders to match.
-     * @param fulfillments        An array of elements allocating offer
-     *                            components to consideration components.
+     * @param fulfillments        An array of elements allocating offer components
+     *                            to consideration components.
      *
      * @return executions An array of elements indicating the sequence of
      *                    transfers performed as part of matching the given

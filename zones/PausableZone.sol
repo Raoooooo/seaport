@@ -1,15 +1,17 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.7;
+pragma solidity >=0.8.7;
 
 import { ZoneInterface } from "../interfaces/ZoneInterface.sol";
 import { ZoneInteractionErrors } from "../interfaces/ZoneInteractionErrors.sol";
 
+// prettier-ignore
 import {
     PausableZoneEventsAndErrors
 } from "./interfaces/PausableZoneEventsAndErrors.sol";
 
 import { SeaportInterface } from "../interfaces/SeaportInterface.sol";
 
+// prettier-ignore
 import {
     AdvancedOrder,
     CriteriaResolver,
@@ -53,7 +55,7 @@ contract PausableZone is
     }
 
     /**
-     * @dev Ensure that the caller is the controller.
+     * @dev Ensure that the caller is either the operator or controller.
      */
     modifier isController() {
         // Ensure that the caller is the controller.
@@ -69,11 +71,71 @@ contract PausableZone is
      * @notice Set the deployer as the controller of the zone.
      */
     constructor() {
-        // Set the controller to the deployer.
         _controller = msg.sender;
+    }
 
-        // Emit an event signifying that the zone is unpaused.
-        emit Unpaused();
+    /**
+     * @notice Check if a given order is currently valid.
+     *
+     * @dev This function is called by Seaport whenever extraData is not
+     *      provided by the caller.
+     *
+     * @param orderHash The hash of the order.
+     * @param caller    The caller in question.
+     * @param offerer   The offerer in question.
+     * @param zoneHash  The hash to provide upon calling the zone.
+     *
+     * @return validOrderMagicValue A magic value indicating if the order is
+     *                              currently valid.
+     */
+    function isValidOrder(
+        bytes32 orderHash,
+        address caller,
+        address offerer,
+        bytes32 zoneHash
+    ) external pure override returns (bytes4 validOrderMagicValue) {
+        orderHash;
+        caller;
+        offerer;
+        zoneHash;
+
+        // Return the selector of isValidOrder as the magic value.
+        validOrderMagicValue = ZoneInterface.isValidOrder.selector;
+    }
+
+    /**
+     * @notice Check if a given order including extraData is currently valid.
+     *
+     * @dev This function is called by Seaport whenever any extraData is
+     *      provided by the caller.
+     *
+     * @param orderHash         The hash of the order.
+     * @param caller            The caller in question.
+     * @param order             The order in question.
+     * @param priorOrderHashes  The order hashes of each order supplied prior to
+     *                          the current order as part of a "match" variety
+     *                          of order fulfillment.
+     * @param criteriaResolvers The criteria resolvers corresponding to
+     *                          the order.
+     *
+     * @return validOrderMagicValue A magic value indicating if the order is
+     *                              currently valid.
+     */
+    function isValidOrderIncludingExtraData(
+        bytes32 orderHash,
+        address caller,
+        AdvancedOrder calldata order,
+        bytes32[] calldata priorOrderHashes,
+        CriteriaResolver[] calldata criteriaResolvers
+    ) external pure override returns (bytes4 validOrderMagicValue) {
+        orderHash;
+        caller;
+        order;
+        priorOrderHashes;
+        criteriaResolvers;
+
+        // Return the selector of isValidOrder as the magic value.
+        validOrderMagicValue = ZoneInterface.isValidOrder.selector;
     }
 
     /**
@@ -92,42 +154,6 @@ contract PausableZone is
     ) external override isOperator returns (bool cancelled) {
         // Call cancel on Seaport and return its boolean value.
         cancelled = seaport.cancel(orders);
-    }
-
-    /**
-     * @notice Pause this contract, safely stopping orders from using
-     *         the contract as a zone. Restricted orders with this address as a
-     *         zone will not be fulfillable unless the zone is redeployed to the
-     *         same address.
-     */
-    function pause(address payee) external override isController {
-        // Emit an event signifying that the zone is paused.
-        emit Paused();
-
-        // Destroy the zone, sending any ether to the transaction submitter.
-        selfdestruct(payable(payee));
-    }
-
-    /**
-     * @notice Assign the given address with the ability to operate the zone.
-     *
-     * @param operatorToAssign The address to assign as the operator.
-     */
-    function assignOperator(address operatorToAssign)
-        external
-        override
-        isController
-    {
-        // Ensure the operator being assigned is not the null address.
-        if (operatorToAssign == address(0)) {
-            revert PauserCanNotBeSetAsZero();
-        }
-
-        // Set the given address as the new operator.
-        operator = operatorToAssign;
-
-        // Emit an event indicating the operator has been updated.
-        emit OperatorUpdated(operator);
     }
 
     /**
@@ -206,66 +232,36 @@ contract PausableZone is
     }
 
     /**
-     * @notice Check if a given order is currently valid.
-     *
-     * @dev This function is called by Seaport whenever extraData is not
-     *      provided by the caller.
-     *
-     * @param orderHash The hash of the order.
-     * @param caller    The caller in question.
-     * @param offerer   The offerer in question.
-     * @param zoneHash  The hash to provide upon calling the zone.
-     *
-     * @return validOrderMagicValue A magic value indicating if the order is
-     *                              currently valid.
+     * @notice Pause this contract, safely stopping orders from using
+     *         the contract as a zone. Restricted orders with this address as a
+     *         zone will not be fulfillable unless the zone is redeployed to the
+     *         same address.
      */
-    function isValidOrder(
-        bytes32 orderHash,
-        address caller,
-        address offerer,
-        bytes32 zoneHash
-    ) external pure override returns (bytes4 validOrderMagicValue) {
-        orderHash;
-        caller;
-        offerer;
-        zoneHash;
-
-        // Return the selector of isValidOrder as the magic value.
-        validOrderMagicValue = ZoneInterface.isValidOrder.selector;
+    function pause() external override isController {
+        // Destroy the zone, sending any ether to the transaction submitter.
+        selfdestruct(payable(tx.origin));
     }
 
     /**
-     * @notice Check if a given order including extraData is currently valid.
+     * @notice Assign the given address with the ability to operate the zone.
      *
-     * @dev This function is called by Seaport whenever any extraData is
-     *      provided by the caller.
-     *
-     * @param orderHash         The hash of the order.
-     * @param caller            The caller in question.
-     * @param order             The order in question.
-     * @param priorOrderHashes  The order hashes of each order supplied prior to
-     *                          the current order as part of a "match" variety
-     *                          of order fulfillment.
-     * @param criteriaResolvers The criteria resolvers corresponding to
-     *                          the order.
-     *
-     * @return validOrderMagicValue A magic value indicating if the order is
-     *                              currently valid.
+     * @param operatorToAssign The address to assign as the operator.
      */
-    function isValidOrderIncludingExtraData(
-        bytes32 orderHash,
-        address caller,
-        AdvancedOrder calldata order,
-        bytes32[] calldata priorOrderHashes,
-        CriteriaResolver[] calldata criteriaResolvers
-    ) external pure override returns (bytes4 validOrderMagicValue) {
-        orderHash;
-        caller;
-        order;
-        priorOrderHashes;
-        criteriaResolvers;
+    function assignOperator(address operatorToAssign)
+        external
+        override
+        isController
+    {
+        // Ensure the operator being assigned is not the null address.
+        require(
+            operatorToAssign != address(0),
+            "Operator can not be set to the null address"
+        );
 
-        // Return the selector of isValidOrder as the magic value.
-        validOrderMagicValue = ZoneInterface.isValidOrder.selector;
+        // Set the given address as the new operator.
+        operator = operatorToAssign;
+
+        // Emit an event indicating the operator has been updated.
+        emit OperatorUpdated(operator);
     }
 }

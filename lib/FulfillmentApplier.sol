@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.13;
+pragma solidity >=0.8.13;
 
 import { ItemType, Side } from "./ConsiderationEnums.sol";
 
+// prettier-ignore
 import {
     OfferItem,
     ConsiderationItem,
@@ -15,6 +16,7 @@ import {
 
 import "./ConsiderationConstants.sol";
 
+// prettier-ignore
 import {
     FulfillmentApplicationErrors
 } from "../interfaces/FulfillmentApplicationErrors.sol";

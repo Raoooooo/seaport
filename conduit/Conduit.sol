@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.7;
+pragma solidity >=0.8.7;
 
 import { ConduitInterface } from "../interfaces/ConduitInterface.sol";
 
@@ -7,6 +7,7 @@ import { ConduitItemType } from "./lib/ConduitEnums.sol";
 
 import { TokenTransferrer } from "../lib/TokenTransferrer.sol";
 
+// prettier-ignore
 import {
     ConduitTransfer,
     ConduitBatch1155Transfer

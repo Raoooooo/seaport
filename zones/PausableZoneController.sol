@@ -1,16 +1,18 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.7;
-
+pragma solidity >=0.8.7;
 import { PausableZone } from "./PausableZone.sol";
 
+// prettier-ignore
 import {
     PausableZoneControllerInterface
 } from "./interfaces/PausableZoneControllerInterface.sol";
 
+// prettier-ignore
 import {
     PausableZoneEventsAndErrors
 } from "./interfaces/PausableZoneEventsAndErrors.sol";
 
+// prettier-ignore
 import {
     Order,
     Fulfillment,
@@ -42,7 +44,7 @@ contract PausableZoneController is
     // Set the address with the ability to pause the zone.
     address internal _pauser;
 
-    // Set the immutable zone creation code hash.
+    // Set the immutable zone creation code.
     bytes32 public immutable zoneCreationCode;
 
     /**
@@ -82,9 +84,10 @@ contract PausableZoneController is
         returns (address derivedAddress)
     {
         // Ensure the caller is the owner.
-        if (msg.sender != _owner) {
-            revert CallerIsNotOwner();
-        }
+        require(
+            msg.sender == _owner,
+            "Only owner can create new Zones from here."
+        );
 
         // Derive the PausableZone address.
         // This expression demonstrates address computation but is not required.
@@ -129,7 +132,7 @@ contract PausableZoneController is
         returns (bool success)
     {
         // Call pause on the given zone.
-        PausableZone(zone).pause(msg.sender);
+        PausableZone(zone).pause();
 
         // Return a boolean indicating the pause was successful.
         success = true;
@@ -138,8 +141,7 @@ contract PausableZoneController is
     /**
      * @notice Cancel Seaport orders on a given zone.
      *
-     * @param pausableZoneAddress The zone that manages the
-     * orders to be cancelled.
+     * @param pausableZoneAddress The zone that manages the orders to be cancelled.
      * @param seaportAddress      The Seaport address.
      * @param orders              The orders to cancel.
      */
@@ -149,9 +151,10 @@ contract PausableZoneController is
         OrderComponents[] calldata orders
     ) external override {
         // Ensure the caller is the owner.
-        if (msg.sender != _owner) {
-            revert CallerIsNotOwner();
-        }
+        require(
+            msg.sender == _owner,
+            "Only the owner can cancel orders with the zone."
+        );
 
         // Create a zone object from the zone address.
         PausableZone zone = PausableZone(pausableZoneAddress);
@@ -163,12 +166,11 @@ contract PausableZoneController is
     /**
      * @notice Execute an arbitrary number of matched orders on a given zone.
      *
-     * @param pausableZoneAddress The zone that manages the orders
-     * to be cancelled.
+     * @param pausableZoneAddress The zone that manages the orders to be cancelled.
      * @param seaportAddress      The Seaport address.
      * @param orders              The orders to match.
-     * @param fulfillments        An array of elements allocating offer
-     *                            components to consideration components.
+     * @param fulfillments        An array of elements allocating offer components
+     *                            to consideration components.
      *
      * @return executions An array of elements indicating the sequence of
      *                    transfers performed as part of matching the given
@@ -181,9 +183,10 @@ contract PausableZoneController is
         Fulfillment[] calldata fulfillments
     ) external payable override returns (Execution[] memory executions) {
         // Ensure the caller is the owner.
-        if (msg.sender != _owner) {
-            revert CallerIsNotOwner();
-        }
+        require(
+            msg.sender == _owner,
+            "Only the owner can execute orders with the zone."
+        );
 
         // Create a zone object from the zone address.
         PausableZone zone = PausableZone(pausableZoneAddress);
@@ -198,21 +201,18 @@ contract PausableZoneController is
     }
 
     /**
-     * @notice Execute an arbitrary number of matched advanced orders on a given
-     *         zone.
+     * @notice Execute an arbitrary number of matched advanced orders on a given zone.
      *
-     * @param pausableZoneAddress The zone that manages the orders to be
-     *                            cancelled.
+     * @param pausableZoneAddress The zone that manages the orders to be cancelled.
      * @param seaportAddress      The Seaport address.
      * @param orders              The orders to match.
-     * @param criteriaResolvers   An array where each element contains a
-     *                            reference to a specific order as well as that
-     *                            order's offer or consideration, a token
-     *                            identifier, and a proof that the supplied
-     *                            token identifier is contained in the
-     *                            order's merkle root.
-     * @param fulfillments        An array of elements allocating offer
-     *                            components to consideration components.
+     * @param criteriaResolvers   An array where each element contains a reference
+     *                            to a specific order as well as that order's
+     *                            offer or consideration, a token identifier, and
+     *                            a proof that the supplied token identifier is
+     *                            contained in the order's merkle root.
+     * @param fulfillments        An array of elements allocating offer components
+     *                            to consideration components.
      *
      * @return executions An array of elements indicating the sequence of
      *                    transfers performed as part of matching the given
@@ -226,9 +226,10 @@ contract PausableZoneController is
         Fulfillment[] calldata fulfillments
     ) external payable override returns (Execution[] memory executions) {
         // Ensure the caller is the owner.
-        if (msg.sender != _owner) {
-            revert CallerIsNotOwner();
-        }
+        require(
+            msg.sender == _owner,
+            "Only the owner can execute advanced orders with the zone."
+        );
 
         // Create a zone object from the zone address.
         PausableZone zone = PausableZone(pausableZoneAddress);
@@ -254,13 +255,13 @@ contract PausableZoneController is
      */
     function transferOwnership(address newPotentialOwner) external override {
         // Ensure the caller is the owner.
-        if (msg.sender != _owner) {
-            revert CallerIsNotOwner();
-        }
+        require(msg.sender == _owner, "Only Owner can transfer Ownership.");
+
         // Ensure the new potential owner is not an invalid address.
-        if (newPotentialOwner == address(0)) {
-            revert OwnerCanNotBeSetAsZero();
-        }
+        require(
+            newPotentialOwner != address(0),
+            "New Owner can not be 0 address."
+        );
 
         // Emit an event indicating that the potential owner has been updated.
         emit PotentialOwnerUpdated(newPotentialOwner);
@@ -275,9 +276,7 @@ contract PausableZoneController is
      */
     function cancelOwnershipTransfer() external override {
         // Ensure the caller is the current owner.
-        if (msg.sender != _owner) {
-            revert CallerIsNotOwner();
-        }
+        require(msg.sender == _owner, "Only Owner can cancel.");
 
         // Emit an event indicating that the potential owner has been cleared.
         emit PotentialOwnerUpdated(address(0));
@@ -293,9 +292,10 @@ contract PausableZoneController is
      */
     function acceptOwnership() external override {
         // Ensure the caller is the potential owner.
-        if (msg.sender != _potentialOwner) {
-            revert CallerIsNotPotentialOwner();
-        }
+        require(
+            msg.sender == _potentialOwner,
+            "Only Potential Owner can claim."
+        );
 
         // Emit an event indicating that the potential owner has been cleared.
         emit PotentialOwnerUpdated(address(0));
@@ -317,13 +317,13 @@ contract PausableZoneController is
      */
     function assignPauser(address pauserToAssign) external override {
         // Ensure the caller is the owner.
-        if (msg.sender != _owner) {
-            revert CallerIsNotOwner();
-        }
+        require(msg.sender == _owner, "Can only be set by the deployer");
+
         // Ensure the pauser to assign is not an invalid address.
-        if (pauserToAssign == address(0)) {
-            revert PauserCanNotBeSetAsZero();
-        }
+        require(
+            pauserToAssign != address(0),
+            "Pauser can not be set to the null address"
+        );
 
         // Set the given account as the pauser.
         _pauser = pauserToAssign;
@@ -344,14 +344,12 @@ contract PausableZoneController is
         address operatorToAssign
     ) external override {
         // Ensure the caller is the owner.
-        if (msg.sender != _owner) {
-            revert CallerIsNotOwner();
-        }
+        require(msg.sender == _owner, "Can only be set by the deployer");
+
         // Create a zone object from the zone address.
         PausableZone zone = PausableZone(pausableZoneAddress);
 
-        // Call assignOperator on the zone by passing in the given
-        // operator address.
+        // Call assignOperator on the zone by passing in the given operator address.
         zone.assignOperator(operatorToAssign);
     }
 

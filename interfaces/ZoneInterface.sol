@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.7;
+pragma solidity >=0.8.7;
 
+// prettier-ignore
 import {
     AdvancedOrder,
     CriteriaResolver

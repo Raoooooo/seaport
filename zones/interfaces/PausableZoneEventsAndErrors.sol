@@ -1,21 +1,11 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.7;
+pragma solidity >=0.8.7;
 
 /**
  * @notice PausableZoneEventsAndErrors contains errors and events
  *         related to zone interaction.
  */
 interface PausableZoneEventsAndErrors {
-    /**
-     * @dev Emit an event whenever a zone is successfully paused.
-     */
-    event Paused();
-
-    /**
-     * @dev Emit an event whenever a zone is successfully unpaused (created).
-     */
-    event Unpaused();
-
     /**
      * @dev Emit an event whenever a zone owner registers a new potential
      *      owner for that zone.
@@ -76,36 +66,4 @@ interface PausableZoneEventsAndErrors {
      *      currently deployed.
      */
     error ZoneAlreadyExists(address zone);
-
-    /**
-     * @dev Revert with an error when the caller does not have the _owner role
-     *
-     */
-    error CallerIsNotOwner();
-
-    /**
-     * @dev Revert with an error when the caller does not have the operator role
-     *
-     */
-    error CallerIsNotOperator();
-
-    /**
-     * @dev Revert with an error when attempting to set the new potential owner
-     *      as the 0 address.
-     *
-     */
-    error OwnerCanNotBeSetAsZero();
-
-    /**
-     * @dev Revert with an error when attempting to set the new potential pauser
-     *      as the 0 address.
-     *
-     */
-    error PauserCanNotBeSetAsZero();
-
-    /**
-     * @dev Revert with an error when the caller does not have
-     *      the potentialOwner role.
-     */
-    error CallerIsNotPotentialOwner();
 }
