@@ -9,7 +9,7 @@ import {
     PausableZoneEventsAndErrors
 } from "./interfaces/PausableZoneEventsAndErrors.sol";
 
-import { SeaportInterface } from "../interfaces/SeaportInterface.sol";
+import { StarportInterface } from "../interfaces/StarportInterface.sol";
 
 // prettier-ignore
 import {
@@ -149,7 +149,7 @@ contract PausableZone is
      *                   been successfully cancelled.
      */
     function cancelOrders(
-        SeaportInterface seaport,
+        StarportInterface seaport,
         OrderComponents[] calldata orders
     ) external override isOperator returns (bool cancelled) {
         // Call cancel on Seaport and return its boolean value.
@@ -172,7 +172,7 @@ contract PausableZone is
      *                    orders.
      */
     function executeMatchOrders(
-        SeaportInterface seaport,
+        StarportInterface seaport,
         Order[] calldata orders,
         Fulfillment[] calldata fulfillments
     )
@@ -211,7 +211,7 @@ contract PausableZone is
      *                    orders.
      */
     function executeMatchAdvancedOrders(
-        SeaportInterface seaport,
+        StarportInterface seaport,
         AdvancedOrder[] calldata orders,
         CriteriaResolver[] calldata criteriaResolvers,
         Fulfillment[] calldata fulfillments

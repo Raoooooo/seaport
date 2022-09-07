@@ -15,7 +15,7 @@ import {
 } from "../lib/ConsiderationStructs.sol";
 
 /**
- * @title SeaportInterface
+ * @title StarportInterface
  * @author 0age
  * @custom:version 1.1
  * @notice Seaport is a generalized ETH/ERC20/ERC721/ERC1155 marketplace. It
@@ -23,9 +23,9 @@ import {
  *         lightweight methods for common routes as well as more flexible
  *         methods for composing advanced orders.
  *
- * @dev SeaportInterface contains all external function interfaces for Seaport.
+ * @dev StarportInterface contains all external function interfaces for Seaport.
  */
-interface SeaportInterface {
+interface StarportInterface {
     /**
      * @notice Fulfill an order offering an ERC721 token by supplying Ether (or
      *         the native token for the given chain) as consideration for the
