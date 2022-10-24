@@ -22,7 +22,7 @@ import {
     Execution
 } from "../lib/ConsiderationStructs.sol";
 
-import { StarportInterface } from "../interfaces/StarportInterface.sol";
+import { StbportInterface } from "../interfaces/StbportInterface.sol";
 
 /**
  * @title  PausableZoneController
@@ -147,7 +147,7 @@ contract PausableZoneController is
      */
     function cancelOrders(
         address pausableZoneAddress,
-        StarportInterface seaportAddress,
+        StbportInterface seaportAddress,
         OrderComponents[] calldata orders
     ) external override {
         // Ensure the caller is the owner.
@@ -178,7 +178,7 @@ contract PausableZoneController is
      */
     function executeMatchOrders(
         address pausableZoneAddress,
-        StarportInterface seaportAddress,
+        StbportInterface seaportAddress,
         Order[] calldata orders,
         Fulfillment[] calldata fulfillments
     ) external payable override returns (Execution[] memory executions) {
@@ -220,7 +220,7 @@ contract PausableZoneController is
      */
     function executeMatchAdvancedOrders(
         address pausableZoneAddress,
-        StarportInterface seaportAddress,
+        StbportInterface seaportAddress,
         AdvancedOrder[] calldata orders,
         CriteriaResolver[] calldata criteriaResolvers,
         Fulfillment[] calldata fulfillments

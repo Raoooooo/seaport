@@ -4,7 +4,7 @@ pragma solidity >=0.8.13;
 import { Consideration } from "./lib/Consideration.sol";
 
 /**
- * @title Starport
+ * @title Stbport
  * @custom:version 1.1
  * @author 0age (0age.eth)
  * @custom:coauthor d1ll0n (d1ll0n.eth)
@@ -73,7 +73,7 @@ import { Consideration } from "./lib/Consideration.sol";
  * @custom:contributor rfart(rfa)
  * @custom:contributor Riley Holterhus
  * @custom:contributor big-tech-sux
- * @notice Starport is a generalized ETH/ERC20/ERC721/ERC1155 marketplace. It
+ * @notice Stbport is a generalized ETH/ERC20/ERC721/ERC1155 marketplace. It
  *         minimizes external calls to the greatest extent possible and provides
  *         lightweight methods for common routes as well as more flexible
  *         methods for composing advanced orders or groups of orders. Each order
@@ -81,7 +81,7 @@ import { Consideration } from "./lib/Consideration.sol";
  *         along with an arbitrary number of items that must be received back by
  *         the indicated recipients (the "consideration").
  */
-contract Starport is Consideration {
+contract Stbport is Consideration {
     /**
      * @notice Derive and set hashes, reference chainId, and associated domain
      *         separator during deployment.
@@ -102,7 +102,7 @@ contract Starport is Consideration {
         // Return the name of the contract.
         assembly {
             mstore(0x20, 0x20)
-            mstore(0x47, 0x07536561706f7274)
+            mstore(0x47, 0x537462706f7274)
             return(0x20, 0x60)
         }
     }
@@ -115,6 +115,6 @@ contract Starport is Consideration {
      */
     function _nameString() internal pure override returns (string memory) {
         // Return the name of the contract.
-        return "Starport";
+        return "Stbport";
     }
 }

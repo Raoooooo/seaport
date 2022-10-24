@@ -17,7 +17,7 @@ import {
     Execution
 } from "../../lib/ConsiderationStructs.sol";
 
-import { StarportInterface } from "../../interfaces/StarportInterface.sol";
+import { StbportInterface } from "../../interfaces/StbportInterface.sol";
 
 /**
  * @title  PausableZoneController
@@ -55,7 +55,7 @@ interface PausableZoneControllerInterface {
      */
     function cancelOrders(
         address pausableZoneAddress,
-        StarportInterface seaportAddress,
+        StbportInterface seaportAddress,
         OrderComponents[] calldata orders
     ) external;
 
@@ -75,7 +75,7 @@ interface PausableZoneControllerInterface {
      */
     function executeMatchOrders(
         address pausableZoneAddress,
-        StarportInterface seaportAddress,
+        StbportInterface seaportAddress,
         Order[] calldata orders,
         Fulfillment[] calldata fulfillments
     ) external payable returns (Execution[] memory executions);
@@ -103,7 +103,7 @@ interface PausableZoneControllerInterface {
      */
     function executeMatchAdvancedOrders(
         address pausableZoneAddress,
-        StarportInterface seaportAddress,
+        StbportInterface seaportAddress,
         AdvancedOrder[] calldata orders,
         CriteriaResolver[] calldata criteriaResolvers,
         Fulfillment[] calldata fulfillments

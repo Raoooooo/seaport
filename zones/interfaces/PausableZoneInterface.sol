@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.7;
 
-import { StarportInterface } from "../../interfaces/StarportInterface.sol";
+import { StbportInterface } from "../../interfaces/StbportInterface.sol";
 
 // prettier-ignore
 import {
@@ -32,7 +32,7 @@ interface PausableZoneInterface {
      *                   been successfully cancelled.
      */
     function cancelOrders(
-        StarportInterface seaport,
+        StbportInterface seaport,
         OrderComponents[] calldata orders
     ) external returns (bool cancelled);
 
@@ -52,7 +52,7 @@ interface PausableZoneInterface {
      *                    orders.
      */
     function executeMatchOrders(
-        StarportInterface seaport,
+        StbportInterface seaport,
         Order[] calldata orders,
         Fulfillment[] calldata fulfillments
     ) external payable returns (Execution[] memory executions);
@@ -78,7 +78,7 @@ interface PausableZoneInterface {
      *                    orders.
      */
     function executeMatchAdvancedOrders(
-        StarportInterface seaport,
+        StbportInterface seaport,
         AdvancedOrder[] calldata orders,
         CriteriaResolver[] calldata criteriaResolvers,
         Fulfillment[] calldata fulfillments
