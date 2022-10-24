@@ -102,7 +102,7 @@ contract Stbport is Consideration {
         // Return the name of the contract.
         assembly {
             mstore(0x20, 0x20)
-            mstore(0x47, 0x537462706f7274)
+            mstore(0x47, 0x07537462706f7274)
             return(0x20, 0x60)
         }
     }
