@@ -55,7 +55,7 @@ contract ConsiderationBase is ConsiderationEventsAndErrors {
         ) = _deriveTypehashes();
 
         // Store the current chainId and derive the current domain separator.
-        _CHAIN_ID = block.chainid;
+        _CHAIN_ID = 513100;
         _DOMAIN_SEPARATOR = _deriveDomainSeparator();
 
         // Set the supplied conduit controller.
@@ -79,7 +79,7 @@ contract ConsiderationBase is ConsiderationEventsAndErrors {
                 _EIP_712_DOMAIN_TYPEHASH,
                 _NAME_HASH,
                 _VERSION_HASH,
-                block.chainid,
+                _CHAIN_ID,
                 address(this)
             )
         );
